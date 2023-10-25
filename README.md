@@ -4,9 +4,9 @@ This is an addon script for Rob Scharein's great knot drawing tool [knotplot](ht
 
 This script uses the knotplot's celtic knot drawing tools to draw "LR" codes (qr codes but made of links). Some examples:
 
-<img  style="background:white;" src="https://github.com/Joecstarr/knotplot_qr/blob/main/examples/qr_httpswww.knotplot.com.svg"/>
-<img  style="background:white;" src="https://github.com/Joecstarr/knotplot_qr/blob/main/examples/qr_httpsjoe-starr.com.svg"/>
-<img  style="background:white;" src="https://github.com/Joecstarr/knotplot_qr/blob/main/examples/qr_httpsen.wikipedia.orgwikiQRcode.svg"/>
+<img  style="background:white;width:100px;height:auto" src="https://github.com/Joecstarr/knotplot_qr/blob/main/examples/qr_httpswww.knotplot.com.svg"/>
+<img  style="background:white;width:100px;height:auto" src="https://github.com/Joecstarr/knotplot_qr/blob/main/examples/qr_httpsjoe-starr.com.svg"/>
+<img  style="background:white;width:100px;height:auto" src="https://github.com/Joecstarr/knotplot_qr/blob/main/examples/qr_httpsen.wikipedia.orgwikiQRcode.svg"/>
 
 
 ## How to use
