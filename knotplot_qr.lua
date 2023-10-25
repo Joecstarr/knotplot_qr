@@ -102,33 +102,39 @@ local footer = {0x65, 0x6E, 0x64, 0x66, 0x0A, 0x0A, 0x0A, 0x0A}
 --- Table for binary version of QR data with header and footer.
 local bin_dat = {}
 --- Object string
-local qr_str = "https://joe-starr.com"
+local qr_str = ""
 
---- @@@TODO: This should be arguments to pass string.
--- if args["--qrstr"] ~= nil then
--- local ok, tab_or_message = qrencode.qrcode(args["--qrstr"],4)
+if #arg > 0 then
 
---- Try to encode string as QR code with high error tolerance. x
-local ok, tab_or_message = qrencode.qrcode(qr_str, 4)
---- If Fail
-if not ok then
-    print(tab_or_message)
-else
-    --- If success
-    local n = #tab_or_message --- count for bytes
-    local size = {0x00, 0x00, 0x00, n, 0x00, 0x00, 0x00, n} --- set grid size
+    --- first argument is expected to be the string to convert.
+    qr_str = arg[1]
 
-    --- Build binary file
-    extend_list(bin_dat, header)
-    extend_list(bin_dat, size)
-    extend_list(bin_dat, qr_to_bin(tab_or_message))
-    extend_list(bin_dat, footer)
+    --- Try to encode string as QR code with high error tolerance. x
+    local ok, tab_or_message = qrencode.qrcode(qr_str, 4)
+    --- If Fail
+    if not ok then
+        executeKP(tab_or_message, [[
+            echo ARG1
+            ]])
+    else
+        --- If success
+        local n = #tab_or_message --- count for bytes
+        local size = {0x00, 0x00, 0x00, n, 0x00, 0x00, 0x00, n} --- set grid size
 
-    --- Write binary file
-    write_temp(bin_dat)
+        --- Build binary file
+        extend_list(bin_dat, header)
+        extend_list(bin_dat, size)
+        extend_list(bin_dat, qr_to_bin(tab_or_message))
+        extend_list(bin_dat, footer)
 
-    --- Knotplot commands
-    executeKP([[
+        --- Write binary file
+        write_temp(bin_dat)
+
+        --- Get filename for qr code
+        file_name = string.gsub(qr_str, "[#$%&'()_*+,/:;<=>?@\\^`{|}~]", "")
+
+        --- Knotplot commands
+        executeKP(file_name, [[
         reset all
         load temp.k
         celt diagram
@@ -140,10 +146,34 @@ else
         color all red
         matrgb s 0 0 0 s
         ortho
+        psmode=40
+        psout qr_ARG1
+        ]])
+
+        --- change line thickness for ps file
+        f = assert(io.open("qr_" .. file_name .. ".eps", "r"))
+        local str = ""
+        while true do
+            local line = f:read()
+            if line == nil then
+                break
+            end
+            if line == "/thin 2.114883 def" then
+                str = str .. "/thin 9 def" .. "\n"
+            elseif line == "/thick {thin 2.000000 mul} def" then
+                str = str .. "/thick {thin 1.1 mul} def" .. "\n"
+            else
+                str = str .. line .. "\n"
+            end
+        end
+        f:close() -- close file
+
+        f = assert(io.open("qr_" .. file_name .. ".eps", "w"))
+        f:write(str)
+        f:close() -- close file
+    end
+else
+    executeKP([[
+        echo You need an argument.
         ]])
 end
--- else
---     executeKP ([[
---         echo You need a '--qrstr' argument.
---         ]])
--- end
