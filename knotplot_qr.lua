@@ -160,6 +160,7 @@ if #arg > 0 then
             end
             if line == "/thin 2.114883 def" then
                 str = str .. "/thin 9 def" .. "\n"
+            end
             if line == "/thin 1.654187 def" then
                 str = str .. "/thin 7 def" .. "\n"
             elseif line == "/thick {thin 2.000000 mul} def" then
